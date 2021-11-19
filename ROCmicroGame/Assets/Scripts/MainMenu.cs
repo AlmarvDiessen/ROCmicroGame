@@ -1,0 +1,22 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class MainMenu : MonoBehaviour
+{
+    public GameObject menu;
+    public GameObject msKnoppen;
+
+    // zorgt ervoor dat de mentaal sport levels menu wordt geactiveert en het hoofd menu wordt gedeactiveert
+    public void OpenMSLevelMenu()
+    {
+        menu.SetActive(false);
+        msKnoppen.SetActive(true);
+    }
+
+    public void Terug()
+    {
+        menu.SetActive(true);
+        msKnoppen.SetActive(false);
+    }
+}
