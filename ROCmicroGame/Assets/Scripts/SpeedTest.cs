@@ -18,12 +18,14 @@ public class SpeedTest : MonoBehaviour
     public Text besteScoreText;
     public Text gemiddeldeKliks;
     public Text scoreTextMenu;
-
-
+    int volgende;
+    public GameObject pauseMenu;
 
     // Start is called before the first frame update
     void Start()
     {
+        volgende = Random.Range(0, houder.transform.childCount);
+        Time.timeScale = 1;
         tijd = 10;
         RandomGetalKiezen();
         ActiveerGekozenKnop(gekozen);
@@ -34,6 +36,7 @@ public class SpeedTest : MonoBehaviour
     {
         ZetTijdEnScore();
         DeactiveerSpelOpTijd();
+        CheckVoorVolgende();
     }
 
     void ZetScoreOpMenu()
@@ -44,6 +47,14 @@ public class SpeedTest : MonoBehaviour
         besteScoreText.text = "BesteScore: " + PlayerPrefs.GetInt("BestScore").ToString();
         gemiddeldeKliks.text = "Gemiddelde kliks: " + (gemiddeld / 10).ToString();
         scoreTextMenu.text = "Score: " + score.ToString();
+    }
+
+    void CheckVoorVolgende()
+    {
+        if (volgende == gekozen)
+        {
+            volgende = Random.Range(0, houder.transform.childCount);
+        }
     }
 
     void CheckVoorHighScore()
@@ -75,17 +86,9 @@ public class SpeedTest : MonoBehaviour
     {
         DeActiveerGekozenKnop(gekozen);
         RandomGetalKiezen();
-        CheckVoorZelfde();
+        gekozen = volgende;
         ActiveerGekozenKnop(gekozen);
         score++;
-    }
-
-    void CheckVoorZelfde()
-    {
-        while(gekozen == laatstGekozen)
-        {
-            RandomGetalKiezen();
-        }
     }
 
     void RandomGetalKiezen()
@@ -114,5 +117,19 @@ public class SpeedTest : MonoBehaviour
     public void TerugNaarHoofdScherm()
     {
         SceneManager.LoadScene(1);
+    }
+
+    public void OpenPauseMenu()
+    {
+        pauseMenu.SetActive(true);
+        spel.SetActive(false);
+        Time.timeScale = 0;
+    }
+
+    public void SluitPauseMenu()
+    {
+        pauseMenu.SetActive(false);
+        spel.SetActive(true);
+        Time.timeScale = 1;
     }
 }
