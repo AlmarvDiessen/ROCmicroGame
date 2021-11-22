@@ -113,6 +113,6 @@ public class SpeedTest : MonoBehaviour
 
     public void TerugNaarHoofdScherm()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 }
