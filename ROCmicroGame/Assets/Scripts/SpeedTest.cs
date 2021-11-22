@@ -9,7 +9,7 @@ public class SpeedTest : MonoBehaviour
     public GameObject houder;
     int gekozen;
     int laatstGekozen;
-    int score;
+    public int score;
     public Text scoreText;
     public Text tijdText;
     float tijd;
