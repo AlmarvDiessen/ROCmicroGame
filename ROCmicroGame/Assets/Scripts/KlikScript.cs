@@ -5,13 +5,41 @@ using UnityEngine.UI;
 
 public class KlikScript : MonoBehaviour
 {
-    private void OnMouseUpAsButton()
+    public bool activated;
+    SpeedTest speedTest;
+    float timer;
+
+    private void Start()
     {
-        this.GetComponent<Image>().color = Color.red;
-        
+        speedTest = FindObjectOfType<SpeedTest>().GetComponent<SpeedTest>();
     }
-    private void OnMouseOver()
+    private void Update()
     {
-        print("Yes");
+        if (activated == false)
+        {
+            if (timer > 0)
+            {            
+                timer -= Time.deltaTime;
+                GetComponent<Image>().color = Color.red;
+            }
+            if (timer < 0)
+            {
+                GetComponent<Image>().color = Color.white;
+            }
+        }
+    }
+
+    public void Geklikt()
+    {
+        if (activated == true)
+        {
+            activated = false;
+            timer = 0;
+            speedTest.KnopGeklikt();
+        } else
+        {
+            timer = 1;
+            speedTest.score--;
+        }
     }
 }

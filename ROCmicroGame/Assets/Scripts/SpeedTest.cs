@@ -20,6 +20,7 @@ public class SpeedTest : MonoBehaviour
     public Text scoreTextMenu;
     int volgende;
     public GameObject pauseMenu;
+    public GameObject knoppenHouder;
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +38,10 @@ public class SpeedTest : MonoBehaviour
         ZetTijdEnScore();
         DeactiveerSpelOpTijd();
         CheckVoorVolgende();
+        if (score <= 0)
+        {
+            score = 0;
+        }
     }
 
     void ZetScoreOpMenu()
@@ -97,15 +102,15 @@ public class SpeedTest : MonoBehaviour
     }
 
     void ActiveerGekozenKnop(int gekozen)
-    {    
-        houder.transform.GetChild(gekozen).GetComponent<Button>().interactable = true;
-        houder.transform.GetChild(gekozen).GetComponent<Image>().color = Color.green;
+    {
+        knoppenHouder.transform.GetChild(gekozen).GetComponent<KlikScript>().activated = true;
+        knoppenHouder.transform.GetChild(gekozen).GetComponent<Image>().color = Color.green;
     }
 
     void DeActiveerGekozenKnop(int gekozen)
     {
-        houder.transform.GetChild(gekozen).GetComponent<Button>().interactable = false;
-        houder.transform.GetChild(gekozen).GetComponent<Image>().color = Color.white;
+        knoppenHouder.transform.GetChild(gekozen).GetComponent<KlikScript>().activated = false;
+        knoppenHouder.transform.GetChild(gekozen).GetComponent<Image>().color = Color.white;
         laatstGekozen = gekozen;
     }
 
