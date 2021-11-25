@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: c96be3e60aa67ae469b7f2da48d7cf8b
+  - enabled: 1
+    path: Assets/Scenes/Speedtest.unity
+    guid: acb81ba3f4a1ed54cb4864643ce93d78
   m_configObjects: {}
