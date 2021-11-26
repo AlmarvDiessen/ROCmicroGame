@@ -7,66 +7,127 @@ using System.Linq;
 public class SimonSaysScript : MonoBehaviour
 {
     //int level
-    public int level = 0;
+    public int level;
     //array voor de buttons
     public Button[] buttons;
 
+    [SerializeField] int[] lightOrder;
+    int colorOrderRunCount;
+    int buttonsClicked;
+
     //twee list 
     //een List die random wordt gevuld
-    List<int> simonSays = new List<int>() {1} ;
+    List<int> simonSays = new List<int>() ;
     //andere list die de speler vult.
     List<int> playerInput = new List<int>();
 
-    //Gameover bool
+    // bools
     bool gameOver = false;
+    public bool won;
+    public bool passed;
 
-    public Color highLightColor;
-    public Color errorColor;
+    private Color highLightColor = Color.blue;
+    private Color defaultColor = Color.white;
+
+  
+
+    private float lightspeed = 0.5f;
     
 
     // Start is called before the first frame update
     void Start()
     {
         //lees de buttons uit
-        buttons[0].onClick.AddListener(() => ButtonClicked(1));
-        buttons[1].onClick.AddListener(() => ButtonClicked(2));
-        buttons[2].onClick.AddListener(() => ButtonClicked(3));
-        buttons[3].onClick.AddListener(() => ButtonClicked(4));
-        buttons[4].onClick.AddListener(() => ButtonClicked(5));
-        buttons[5].onClick.AddListener(() => ButtonClicked(6));
-        buttons[6].onClick.AddListener(() => ButtonClicked(7));
-        buttons[7].onClick.AddListener(() => ButtonClicked(8));
-        buttons[8].onClick.AddListener(() => ButtonClicked(9));
-        level++;
+        buttons[0].onClick.AddListener(() => ButtonClickOrder(0));
+        buttons[1].onClick.AddListener(() => ButtonClickOrder(1));
+        buttons[2].onClick.AddListener(() => ButtonClickOrder(2));
+        buttons[3].onClick.AddListener(() => ButtonClickOrder(3));
+        buttons[4].onClick.AddListener(() => ButtonClickOrder(4));
+        buttons[5].onClick.AddListener(() => ButtonClickOrder(5));
+        buttons[6].onClick.AddListener(() => ButtonClickOrder(6));
+        buttons[7].onClick.AddListener(() => ButtonClickOrder(7));
+        buttons[8].onClick.AddListener(() => ButtonClickOrder(8));
         
+
+        
+        //buttons[0].GetComponent<Image>().color = highLightColor;
     }
 
-    // Update is called once per frame
-    void Update()
+     public void OnEnable()
     {
-        for(int i = 0; i < level; i++)
+        level = 0;
+        buttonsClicked = 0;
+        colorOrderRunCount = -1;
+        won = false;
+        for(int i = 0; i < lightOrder.Length; i++)
         {
-            simonSays.Add(Random.Range(1, 9));
+            //lightOrder[i] = Random.Range(0, 8);
+            simonSays.Add(lightOrder[i] = Random.Range(0, 8));
+        }
+        level = 1;
+        StartCoroutine(ColorOrder());
+    }
+
+   public void ButtonClickOrder(int button)
+    {
+        playerInput.Add(button);
+        print(button);
+        print(buttonsClicked+ "  suck my dick bitch");
+        buttonsClicked++;
+        if(button == lightOrder[buttonsClicked - 1])
+        {
+            Debug.Log("pass");
+            passed = true;
+        }
+        else
+        {
+            won = false;
+            passed = false;
+        }
+
+        if (buttonsClicked == level && passed == true && buttonsClicked !=5)
+        {
+            print("level up");
+            level++;
+            passed = false;
+            StartCoroutine(ColorOrder());
+        }
+        if (buttonsClicked == level && passed == true && buttonsClicked == 5)
+        {
+            won = true;
+            //do something 
         }
     }
+
+    IEnumerator ColorOrder()
+    {
+        buttonsClicked = 0;
+        colorOrderRunCount++;
+        DisableButtons();
+        //buttons[lightOrder[0]].GetComponent<Image>().color = highLightColor;
+        for (int i = 0; i < level; i++)
+        {
+            if(level >= colorOrderRunCount)
+            {
+                buttons[lightOrder[i]].GetComponent<Image>().color = defaultColor;
+                yield return new WaitForSeconds(lightspeed);
+                buttons[lightOrder[i]].GetComponent<Image>().color = highLightColor;
+                yield return new WaitForSeconds(lightspeed);
+                buttons[lightOrder[i]].GetComponent<Image>().color = defaultColor;
+                yield return new WaitForSeconds(lightspeed);
+
+
+            }
+
+        }
+        EnableButtons();
+
+
+    }
+
+
     // fuction als de button word geklikt
-    private void ButtonClicked(int id)
-    {
-        //voeg de Element ID toe aan the list
-        playerInput.Add(id);
-        
 
-        print(id);
-        IslistsGelijk(simonSays,playerInput);
-
-    }
-    
-
-    public async void SimonSays()
-    {
-        //for(int i = 0; i <= level)
-       // await buttons[]
-    }
 
     // check om te kijken of de twee lists gelijk zijn aan elkaar.
     //Method met statement en een return value
@@ -89,6 +150,21 @@ public class SimonSaysScript : MonoBehaviour
     
     //als de twee list != aan de elkaar dan gameover = true
     //else blijf door gaan.
+
+    void DisableButtons()
+    {
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            buttons[i].GetComponent<Button>().interactable = false;
+        }
+    }
+    void EnableButtons()
+    {
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            buttons[i].GetComponent<Button>().interactable = true;
+        }
+    }
 }
 
      
