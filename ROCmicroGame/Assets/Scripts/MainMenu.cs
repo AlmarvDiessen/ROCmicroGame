@@ -22,6 +22,11 @@ public class MainMenu : MonoBehaviour
     }
     public void LaadSnelheidTest()
     {
+        SceneManager.LoadScene(1);
+    }
+
+    public void SimonSays()
+    {
         SceneManager.LoadScene(2);
     }
 }

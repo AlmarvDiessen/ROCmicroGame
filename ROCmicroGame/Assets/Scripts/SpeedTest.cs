@@ -116,12 +116,12 @@ public class SpeedTest : MonoBehaviour
 
     public void Herstart()
     {
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(1);
     }
 
     public void TerugNaarHoofdScherm()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
     }
 
     public void OpenPauseMenu()
