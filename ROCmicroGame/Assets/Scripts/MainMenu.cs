@@ -25,6 +25,11 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
+    public void ReactieVermogenTest()
+    {
+        SceneManager.LoadScene(3);
+    }
+
     public void SimonSays()
     {
         SceneManager.LoadScene(2);
