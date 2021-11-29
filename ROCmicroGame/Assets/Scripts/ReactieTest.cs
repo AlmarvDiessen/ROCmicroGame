@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class ReactieTest : MonoBehaviour
 {
+    public Button settingsButton;
+    public Button gameButton;
     bool klikbaar = false;
     float wachttijd;
     float kliktijd;
@@ -17,6 +19,7 @@ public class ReactieTest : MonoBehaviour
     public Text beurtenText;
     public Text besteTijd;
     public Text gemiddeldeText;
+    public GameObject pauseMenu;
 
     // Start is called before the first frame update
     void Start()
@@ -106,6 +109,7 @@ public class ReactieTest : MonoBehaviour
 
     public void ResetGame()
     {
+        settingsButton.enabled = true;
         beurten--;
         teVroegScherm.SetActive(false);
         Time.timeScale = 1;
@@ -116,6 +120,7 @@ public class ReactieTest : MonoBehaviour
     void TeVroegGeklikt()
     {
         teVroegScherm.SetActive(true);
+        settingsButton.enabled = false;
         Time.timeScale = 0;
     }
 
@@ -126,6 +131,25 @@ public class ReactieTest : MonoBehaviour
             klikKnop.GetComponent<Image>().color = Color.red;
         }
         else klikKnop.GetComponent<Image>().color = Color.green;
+    }
+
+    public void OpenPauseMenu()
+    {
+        Time.timeScale = 0;
+        gameButton.enabled = false;
+        pauseMenu.SetActive(true);
+    }
+
+    public void Doorgaan()
+    {
+        pauseMenu.SetActive(false);
+        gameButton.enabled = true;
+        Time.timeScale = 1;
+    }
+
+    public void TerugNaarHoofdScherm()
+    {
+        SceneManager.LoadScene(0);
     }
 
     public void Opnieuw()

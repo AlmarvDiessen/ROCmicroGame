@@ -12,11 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Speedtest.unity
     guid: acb81ba3f4a1ed54cb4864643ce93d78
   - enabled: 1
-<<<<<<< HEAD
-    path: Assets/Scenes/ReactieTest.unity
-    guid: 8849ac39e9044314ba4f0d9761c23fd2
-=======
     path: Assets/Scenes/SimonSays.unity
     guid: a1c5693831efcc746b6cbeb3058e8a61
->>>>>>> develop
+  - enabled: 1
+    path: Assets/Scenes/ReactieTest.unity
+    guid: 8849ac39e9044314ba4f0d9761c23fd2
   m_configObjects: {}
