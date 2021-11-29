@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
@@ -18,5 +19,19 @@ public class MainMenu : MonoBehaviour
     {
         menu.SetActive(true);
         msKnoppen.SetActive(false);
+    }
+    public void LaadSnelheidTest()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+    public void ReactieVermogenTest()
+    {
+        SceneManager.LoadScene(3);
+    }
+
+    public void SimonSays()
+    {
+        SceneManager.LoadScene(2);
     }
 }
