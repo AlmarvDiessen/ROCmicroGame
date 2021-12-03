@@ -46,13 +46,11 @@ public class SimonSaysScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        pauseMenu.SetActive(false);
-<<<<<<< HEAD
         gameOverScreen.SetActive(false);
         //lees de buttons uit
-=======
+
         //lees de buttons uit en geeft een waarda aan int button in de ButtonClickOrder()
->>>>>>> develop
+
         buttons[0].onClick.AddListener(() => ButtonClickOrder(0));
         buttons[1].onClick.AddListener(() => ButtonClickOrder(1));
         buttons[2].onClick.AddListener(() => ButtonClickOrder(2));
