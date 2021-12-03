@@ -20,6 +20,7 @@ public class ReactieTest : MonoBehaviour
     public TextMeshProUGUI beurtenText;
     public TextMeshProUGUI besteTijd;
     public TextMeshProUGUI gemiddeldeText;
+    public TextMeshProUGUI besteGemiddelde;
     public GameObject pauseMenu;
 
     // Start is called before the first frame update
@@ -62,8 +63,22 @@ public class ReactieTest : MonoBehaviour
 
     void ZetScore()
     {
-        besteTijd.text = "Beste Tijd: " + Bestetijd(tijden).ToString("F2");
-        gemiddeldeText.text = "Gemiddeld: " + Gemiddelde(tijden).ToString("F2");
+        besteTijd.text = "Beste Tijd: " + Bestetijd(tijden).ToString("F3");
+        gemiddeldeText.text = "Gemiddeld: " + Gemiddelde(tijden).ToString("F3");
+        CheckVoorHighScoreEnZet(Gemiddelde(tijden));
+        besteGemiddelde.text = "Beste Gemiddelde: " + PlayerPrefs.GetFloat("GBT").ToString("F3");
+    }
+
+    void CheckVoorHighScoreEnZet(float tijdBehaald)
+    {
+        if (PlayerPrefs.GetFloat("GBT") == 0)
+        {
+            PlayerPrefs.SetFloat("GBT", tijdBehaald);
+        }
+        if (PlayerPrefs.GetFloat("GBT") > tijdBehaald)
+        {
+            PlayerPrefs.SetFloat("GBT", tijdBehaald);
+        }
     }
 
     void ZetTijd()
