@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Linq;
 
 public class SimonSaysScript : MonoBehaviour
@@ -14,6 +15,9 @@ public class SimonSaysScript : MonoBehaviour
     [SerializeField] int[] lightOrder;
     int colorOrderRunCount;
     int buttonsClicked;
+
+    public Text levelText;
+   
 
     //twee list 
     //een List die random wordt gevuld
@@ -29,6 +33,9 @@ public class SimonSaysScript : MonoBehaviour
     private Color highLightColor = Color.blue;
     private Color defaultColor = Color.white;
 
+    public GameObject game;
+    public GameObject pauseMenu;
+
   
 
     private float lightspeed = 0.5f;
@@ -37,6 +44,7 @@ public class SimonSaysScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        pauseMenu.SetActive(false);
         //lees de buttons uit
         buttons[0].onClick.AddListener(() => ButtonClickOrder(0));
         buttons[1].onClick.AddListener(() => ButtonClickOrder(1));
@@ -53,8 +61,14 @@ public class SimonSaysScript : MonoBehaviour
         //buttons[0].GetComponent<Image>().color = highLightColor;
     }
 
-     public void OnEnable()
+    private void Update()
     {
+        levelText.text = "Level: " + level.ToString();
+    }
+
+    public void OnEnable()
+    {
+        
         level = 0;
         buttonsClicked = 0;
         colorOrderRunCount = -1;
@@ -116,9 +130,7 @@ public class SimonSaysScript : MonoBehaviour
                 buttons[lightOrder[i]].GetComponent<Image>().color = defaultColor;
                 yield return new WaitForSeconds(lightspeed);
 
-
             }
-
         }
         EnableButtons();
 
@@ -165,7 +177,26 @@ public class SimonSaysScript : MonoBehaviour
             buttons[i].GetComponent<Button>().interactable = true;
         }
     }
+
+    public void PauseMenu()
+    {
+        pauseMenu.SetActive(true);
+        game.SetActive(false);
+        
+    }
+
+    public void ClosePauseMenu()
+    {
+        pauseMenu.SetActive(false);
+        game.SetActive(true);
+        
+    }
+    public void MainMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+
 }
 
-     
-     
+
+
