@@ -29,6 +29,7 @@ public class SimonSaysScript : MonoBehaviour
     bool gameOver = false;
     public bool won;
     public bool passed;
+    public bool endeless;
 
     private Color highLightColor = Color.blue;
     private Color defaultColor = Color.white;
@@ -45,7 +46,7 @@ public class SimonSaysScript : MonoBehaviour
     void Start()
     {
         pauseMenu.SetActive(false);
-        //lees de buttons uit
+        //lees de buttons uit en geeft een waarda aan int button in de ButtonClickOrder()
         buttons[0].onClick.AddListener(() => ButtonClickOrder(0));
         buttons[1].onClick.AddListener(() => ButtonClickOrder(1));
         buttons[2].onClick.AddListener(() => ButtonClickOrder(2));
@@ -63,32 +64,34 @@ public class SimonSaysScript : MonoBehaviour
 
     private void Update()
     {
+        //zet wat text met de level variable naar string
         levelText.text = "Level: " + level.ToString();
     }
 
     public void OnEnable()
     {
-        
+        //begin waardes voor alles
         level = 0;
+        endeless = true;
         buttonsClicked = 0;
         colorOrderRunCount = -1;
         won = false;
         for(int i = 0; i < lightOrder.Length; i++)
         {
             //lightOrder[i] = Random.Range(0, 8);
+            //voegt een aantal random nummer toe aande hand van hoe groot de index is van de array
             simonSays.Add(lightOrder[i] = Random.Range(0, 8));
         }
         level = 1;
-        StartCoroutine(ColorOrder());
+        StartCoroutine(ColorOrder()); //start de Coroutine voor de color order
     }
 
    public void ButtonClickOrder(int button)
     {
-        playerInput.Add(button);
         print(button);
-        print(buttonsClicked+ "  suck my dick bitch");
+        print(buttonsClicked);
         buttonsClicked++;
-        if(button == lightOrder[buttonsClicked - 1])
+        if(button == lightOrder[buttonsClicked - 1])// buttonClicked is 1 - 1 = 0 en de buttons waarde is van 0 tot 8 om het zo gelijk te maken
         {
             Debug.Log("pass");
             passed = true;
@@ -97,16 +100,17 @@ public class SimonSaysScript : MonoBehaviour
         {
             won = false;
             passed = false;
+            print("F");
         }
 
-        if (buttonsClicked == level && passed == true && buttonsClicked !=5)
+        if (buttonsClicked == level && passed == true && endeless == true)
         {
             print("level up");
-            level++;
+            level++;//level gaat up als de buttons clicked gelijk is aan elkaar
             passed = false;
             StartCoroutine(ColorOrder());
         }
-        if (buttonsClicked == level && passed == true && buttonsClicked == 5)
+        if (buttonsClicked == level && passed == true && endeless == false)
         {
             won = true;
             //do something 
@@ -117,14 +121,14 @@ public class SimonSaysScript : MonoBehaviour
     {
         buttonsClicked = 0;
         colorOrderRunCount++;
-        DisableButtons();
+        DisableButtons(); // zet de knoppen uit
         //buttons[lightOrder[0]].GetComponent<Image>().color = highLightColor;
         for (int i = 0; i < level; i++)
         {
-            if(level >= colorOrderRunCount)
+            if(level >= colorOrderRunCount) // 
             {
-                buttons[lightOrder[i]].GetComponent<Image>().color = defaultColor;
-                yield return new WaitForSeconds(lightspeed);
+                buttons[lightOrder[i]].GetComponent<Image>().color = defaultColor; // begint met de default color
+                yield return new WaitForSeconds(lightspeed); //wacht voor de lightspeed(halve seconde)
                 buttons[lightOrder[i]].GetComponent<Image>().color = highLightColor;
                 yield return new WaitForSeconds(lightspeed);
                 buttons[lightOrder[i]].GetComponent<Image>().color = defaultColor;
@@ -132,16 +136,56 @@ public class SimonSaysScript : MonoBehaviour
 
             }
         }
-        EnableButtons();
+        EnableButtons();//zet de knoppen weer aan
 
 
     }
 
 
-    // fuction als de button word geklikt
 
+    void DisableButtons()
+    {
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            //telt het aantal buttons en zet ze uit
+            buttons[i].GetComponent<Button>().interactable = false;
+        }
+    }
+    void EnableButtons()
+    {
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            //andersom maar dan aan
+            buttons[i].GetComponent<Button>().interactable = true;
+        }
+    }
+    // settings voor de button
+    public void PauseMenu()
+    {
+        pauseMenu.SetActive(true);
+        game.SetActive(false);
+        
+    }
 
-    // check om te kijken of de twee lists gelijk zijn aan elkaar.
+    public void ClosePauseMenu()
+    {
+        pauseMenu.SetActive(false);
+        game.SetActive(true);
+        
+    }
+    public void MainMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void Reload()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+}
+
+/*
+ *     // check om te kijken of de twee lists gelijk zijn aan elkaar.
     //Method met statement en een return value
     public bool IslistsGelijk(List<int> simonSays, List<int> playerInput)
     {
@@ -162,41 +206,6 @@ public class SimonSaysScript : MonoBehaviour
     
     //als de twee list != aan de elkaar dan gameover = true
     //else blijf door gaan.
-
-    void DisableButtons()
-    {
-        for (int i = 0; i < buttons.Length; i++)
-        {
-            buttons[i].GetComponent<Button>().interactable = false;
-        }
-    }
-    void EnableButtons()
-    {
-        for (int i = 0; i < buttons.Length; i++)
-        {
-            buttons[i].GetComponent<Button>().interactable = true;
-        }
-    }
-
-    public void PauseMenu()
-    {
-        pauseMenu.SetActive(true);
-        game.SetActive(false);
-        
-    }
-
-    public void ClosePauseMenu()
-    {
-        pauseMenu.SetActive(false);
-        game.SetActive(true);
-        
-    }
-    public void MainMenu()
-    {
-        SceneManager.LoadScene(0);
-    }
-
-}
-
+ */
 
 
