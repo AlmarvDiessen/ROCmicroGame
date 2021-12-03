@@ -34,6 +34,7 @@ public class SimonSaysScript : MonoBehaviour
     private Color defaultColor = Color.white;
 
     public GameObject game;
+    public GameObject gameOverScreen;
     public GameObject pauseMenu;
 
   
@@ -45,6 +46,7 @@ public class SimonSaysScript : MonoBehaviour
     void Start()
     {
         pauseMenu.SetActive(false);
+        gameOverScreen.SetActive(false);
         //lees de buttons uit
         buttons[0].onClick.AddListener(() => ButtonClickOrder(0));
         buttons[1].onClick.AddListener(() => ButtonClickOrder(1));
