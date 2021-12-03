@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class SpeedTest : MonoBehaviour
 {
@@ -10,37 +11,60 @@ public class SpeedTest : MonoBehaviour
     int gekozen;
     int laatstGekozen;
     public int score;
-    public Text scoreText;
-    public Text tijdText;
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI tijdText;
     float tijd;
     public GameObject spel;
     public GameObject menu;
-    public Text besteScoreText;
-    public Text gemiddeldeKliks;
-    public Text scoreTextMenu;
+    public TextMeshProUGUI besteScoreText;
+    public TextMeshProUGUI gemiddeldeKliks;
+    public TextMeshProUGUI scoreTextMenu;
     int volgende;
     public GameObject pauseMenu;
     public GameObject knoppenHouder;
+    public TextMeshProUGUI aftelText;
+    bool spelGestart;
+    float aftelTijd;
 
     // Start is called before the first frame update
     void Start()
-    {
+    {       
         volgende = Random.Range(0, houder.transform.childCount);
         Time.timeScale = 1;
         tijd = 10;
+        aftelTijd = 3;
         RandomGetalKiezen();
         ActiveerGekozenKnop(gekozen);
+        aftelText.fontSizeMax = 500;
     }
 
     // Update is called once per frame
     void Update()
     {
-        ZetTijdEnScore();
-        DeactiveerSpelOpTijd();
-        CheckVoorVolgende();
-        if (score <= 0)
+        ActiveerSpelNaTijd();
+    }
+
+    void ActiveerSpelNaTijd()
+    {
+        if (aftelTijd > 1)
         {
-            score = 0;
+            aftelTijd -= Time.deltaTime;
+            aftelText.text = aftelTijd.ToString("F0");
+        }
+        else
+        {
+            aftelText.gameObject.SetActive(false);
+            spelGestart = true;
+        }
+        if (spelGestart == true)
+        {
+            ZetTijdEnScore();
+            DeactiveerSpelOpTijd();
+            CheckVoorVolgende();
+            if (score <= 0)
+            {
+                score = 0;
+            }
         }
     }
 
@@ -128,12 +152,17 @@ public class SpeedTest : MonoBehaviour
     {
         pauseMenu.SetActive(true);
         spel.SetActive(false);
+        aftelText.gameObject.SetActive(false);
         Time.timeScale = 0;
     }
 
     public void SluitPauseMenu()
     {
         pauseMenu.SetActive(false);
+        if (spelGestart == false)
+        {
+            aftelText.gameObject.SetActive(true);
+        }
         spel.SetActive(true);
         Time.timeScale = 1;
     }

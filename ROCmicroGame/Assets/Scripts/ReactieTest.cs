@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class ReactieTest : MonoBehaviour
 {
@@ -16,9 +17,9 @@ public class ReactieTest : MonoBehaviour
     public GameObject teVroegScherm;
     int beurten = 5;
     public GameObject eindScherm;
-    public Text beurtenText;
-    public Text besteTijd;
-    public Text gemiddeldeText;
+    public TextMeshProUGUI beurtenText;
+    public TextMeshProUGUI besteTijd;
+    public TextMeshProUGUI gemiddeldeText;
     public GameObject pauseMenu;
 
     // Start is called before the first frame update
@@ -103,6 +104,7 @@ public class ReactieTest : MonoBehaviour
         {
             Time.timeScale = 0;
             ZetScore();
+            settingsButton.enabled = false;
             eindScherm.SetActive(true);
         }
     }
