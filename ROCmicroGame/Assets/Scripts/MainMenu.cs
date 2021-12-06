@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    public int scene = 0;
+
     public GameObject menu;
     public GameObject msKnoppen;
 
