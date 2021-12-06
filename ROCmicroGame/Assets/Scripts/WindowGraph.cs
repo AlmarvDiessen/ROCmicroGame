@@ -1,3 +1,15 @@
+/*
+
+Door: Léon Conner Blaauw
+
+In de toekomst zou ik graag de bug willen fixen waar als er teveel punten zijn in de grafiek,
+er de labels op de x as te dicht op elkaar gaan staan.
+
+Dit zou ik hoogst waarschijnlijk kunnen fixen door te kijken naar de .count van de list
+en als de list een x aantal aan variabelen erin heeft, de x as labels een x aantal keren over te slaan per keer na dat een x as label is geplaatst.
+
+*/
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +18,9 @@ using UnityEngine.UI;
 
 public class WindowGraph : MonoBehaviour
 {
+    IGraphVisual lineGraphVisual;
+    IGraphVisual barChartVisual;
+
     public static bool lastDot;
 
     [SerializeField] private Sprite dotSprite;
@@ -20,8 +35,16 @@ public class WindowGraph : MonoBehaviour
 
     private List<GameObject> gameObjectList;
 
+    // Cached Values
+    private List<int> valueList;
+    private IGraphVisual graphVisual;
+    private int maxVisibleValueAmount;
+    private Func<int, string> getAxisLabelX;
+    private Func<float, string> getAxisLabelY;
+
     private void Awake()
     {
+        // Grab base objects references
         graphContainer = transform.Find("GraphContainer").GetComponent<RectTransform>();
         labelTemplateX = graphContainer.Find("labelTemplateX").GetComponent<RectTransform>();
         labelTemplateY = graphContainer.Find("labelTemplateY").GetComponent<RectTransform>();
@@ -30,12 +53,12 @@ public class WindowGraph : MonoBehaviour
 
         gameObjectList = new List<GameObject>();
 
-        List<int> valueList = new List<int>() { 2, 98, 56, 45, 39, 22, 17, 15, 13, 17, 25, 37, 40, 36, 33 };
-        IGraphVisual lineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.green, new Color(1, 1, 1, .5f));
-        IGraphVisual barChartVisual = new BarChartVisual(graphContainer, Color.green, .8f);
-        ShowGraph(valueList, lineGraphVisual, -1, (int _i) => "Day" +(_i+1), (float _f) => "$" + Mathf.RoundToInt(_f));
+        List<int> valueList = new List<int>() { 2, 98, 56, 45, 39, 22, 17, 15, 13, 17, 25, 37, 40, 36, 33, 98, 56, 45, 39, 22, 17, 15, 13, 17, 25, 37, 40, 36, 33, 98, 56, 45, 39, 22, 17, 15, 13, 17, 25, 37, 40, 36, 33, 98, 56, 45, 39, 22, 17, 15, 13, 17, 25, 37, 40, 36, 33, 98, 56, 45, 39, 22, 17, 15, 13, 17, 25, 37, 40, 36, 33 };
+        lineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.green, new Color(1, 1, 1, .5f));
+        barChartVisual = new BarChartVisual(graphContainer, Color.green, .8f);
+        ShowGraph(valueList, barChartVisual, -1, (int _i) => ""/*<- Hier kan je iets neerzetten wat voor de getallen op de x as komt*/ +(_i+1), (float _f) => "$ " + Mathf.RoundToInt(_f));
 
-        bool useBarChart = false;
+        /*bool useBarChart = false;
         if (useBarChart)
         {
             ShowGraph(valueList, barChartVisual, -1, (int _i) => "Day" + (_i + 1), (float _f) => "$" + Mathf.RoundToInt(_f));
@@ -44,17 +67,44 @@ public class WindowGraph : MonoBehaviour
         {
             ShowGraph(valueList, lineGraphVisual, -1, (int _i) => "Day" + (_i + 1), (float _f) => "$" + Mathf.RoundToInt(_f));
         }
+        */
+    }
+
+    private void SetGraphVisual(IGraphVisual graphVisual)
+    {
+        ShowGraph(this.valueList, graphVisual, this.maxVisibleValueAmount, this.getAxisLabelX, this.getAxisLabelY);
     }
 
     private void ShowGraph(List<int> valueList, IGraphVisual graphVisual, int maxVisibleValueAmount = -1, Func<int, string> getAxisLabelX = null, Func<float, string> getAxisLabelY = null)
     {
-        if(getAxisLabelX == null)
+        this.valueList = valueList;
+        this.graphVisual = graphVisual;
+        this.getAxisLabelX = getAxisLabelX;
+        this.getAxisLabelY = getAxisLabelY;
+
+        if (maxVisibleValueAmount <= 0)
+        {
+            // Show all if no amount specified.
+            maxVisibleValueAmount = valueList.Count;
+        }
+
+        if (maxVisibleValueAmount > valueList.Count)
+        {
+            // vallidate the amount to show the maximum
+            // maxVisibleValueAmount = valueList.Count;
+            maxVisibleValueAmount = 1;
+        }
+
+        this.maxVisibleValueAmount = maxVisibleValueAmount;
+
+        if (getAxisLabelX == null)
         {
             getAxisLabelX = delegate (int _i)
             {
                 return _i.ToString();
             };
         }
+
         if (getAxisLabelY == null)
         {
             getAxisLabelY = delegate (float _f)
@@ -63,10 +113,7 @@ public class WindowGraph : MonoBehaviour
             };
         }
 
-        if (maxVisibleValueAmount <= 0)
-        {
-            maxVisibleValueAmount = valueList.Count;
-        }
+
 
         foreach (GameObject gameObject in gameObjectList)
         {
@@ -94,14 +141,12 @@ public class WindowGraph : MonoBehaviour
         }
 
         float yDifference = yMaximum - yMinimum;
-        if (yDifference <= 0)
-        {
-            yDifference = 5f;
-        }
+        if (yDifference <= 0) yDifference = 5f;
+
         yMaximum = yMaximum + (yDifference * 0.2f);
         yMinimum = yMinimum - (yDifference * 0.2f);
 
-        yMinimum = 0f; // Start the graph at zero.
+        yMinimum = 0f; // Dit zorgt ervoor dat de grafiek op 0 begint.
 
         float xSize = graphWidth / (maxVisibleValueAmount + 1);
 
@@ -112,11 +157,27 @@ public class WindowGraph : MonoBehaviour
             float xPosition = xSize + xIndex * xSize;
             float yPosition = ((valueList[i] - yMinimum) / (yMaximum - yMinimum)) * graphHeight;
 
-            lastDot = false;//----------------------------------
-            if (i == 0)
+            /*
+            // doet het zelfde als:
+            if (i == valueList.Count - maxVisibleValueAmount)
             {
                 lastDot = true;
             }
+            else
+            {
+                lastDot = false;
+            }
+
+            //of dit zou ook in mijn geval werken.
+
+            lastDot = false;
+            if (i == valueList.Count - maxVisibleValueAmount) lastDot = true;
+            ____________________________________________________
+
+            //valueList.Count - maxVisibleValueAmount zorgt ervoor dat het programma mee telt of dit het eerste punt is van de zichtbare punten in de grafiek.
+
+            */
+            lastDot = (i == valueList.Count - maxVisibleValueAmount) ? true : false;
 
             gameObjectList.AddRange(graphVisual.AddGraphVisual(new Vector2(xPosition, yPosition), xSize));
 
@@ -135,7 +196,7 @@ public class WindowGraph : MonoBehaviour
 
             xIndex++;
         }
-
+        
         int seperatorCount = 10;
         for (int i = 0; i <= seperatorCount; i++)
         {
@@ -229,9 +290,11 @@ public class WindowGraph : MonoBehaviour
             return gameObjectList;
         }
 
+        GameObject gameObject;
+
         private GameObject CreateDot(Vector2 anchoredPosition)
         {
-            GameObject gameObject = new GameObject("dot", typeof(Image));
+            gameObject = new GameObject("dot", typeof(Image));
             gameObject.transform.SetParent(graphContainer, false);
             gameObject.GetComponent<Image>().sprite = dotSprite;
             gameObject.GetComponent<Image>().color = dotColor;
@@ -256,7 +319,27 @@ public class WindowGraph : MonoBehaviour
             rectTransform.sizeDelta = new Vector2(distance, 3f);
             rectTransform.anchoredPosition = dotPositionA + dir * distance * .5f;
             rectTransform.localEulerAngles = new Vector3(0, 0, (Mathf.Atan2(dir.y, dir.x) * 180 / Mathf.PI));
+
             return gameObject;
         }
+    }
+
+    public void BarChartBtn()
+    {
+        SetGraphVisual(barChartVisual);
+    }
+
+    public void LineGraphBtn()
+    {
+        SetGraphVisual(lineGraphVisual);
+    }
+
+    public void decreaseVisibleAmountBtn()
+    {
+        ShowGraph(this.valueList, this.graphVisual, this.maxVisibleValueAmount - 1, this.getAxisLabelX, this.getAxisLabelY);
+    }
+    public void increaseVisibleAmountBtn()
+    {
+        ShowGraph(this.valueList, this.graphVisual, this.maxVisibleValueAmount + 1, this.getAxisLabelX, this.getAxisLabelY);
     }
 }
