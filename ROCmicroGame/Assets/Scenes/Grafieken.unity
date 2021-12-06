@@ -1771,7 +1771,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bed0a37a155f28e48b6a0cfc13632d6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dotSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  dotSprite: {fileID: 21300000, guid: c22c48060bdad644fbd818d19fca3792, type: 3}
 --- !u!1 &2040387146
 GameObject:
   m_ObjectHideFlags: 0

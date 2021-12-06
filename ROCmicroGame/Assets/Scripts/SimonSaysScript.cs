@@ -41,7 +41,44 @@ public class SimonSaysScript : MonoBehaviour
   
 
     private float lightspeed = 0.5f;
-    
+
+
+
+    //-----------------------
+
+    public List<int> simonSaysScores = new List<int>();
+    private int savedListCount;
+    public int score;
+
+    public List<int> newSimonSaysScores = new List<int>();
+
+    public void SaveList()
+    {
+        for(int i = 0; i < simonSaysScores.Count; i++)
+        {
+            PlayerPrefs.SetInt("simonSaysScores" + i, simonSaysScores[i]);
+            print("bischmilla" + simonSaysScores.Count);
+        }
+
+        PlayerPrefs.SetInt("aantalSimonScores", simonSaysScores.Count);
+        LoadList();
+    }
+
+    public void LoadList()
+    {
+        savedListCount = PlayerPrefs.GetInt("aantalSimonScores");
+
+        for (int i = 0; i < savedListCount; i++)
+        {
+            score = PlayerPrefs.GetInt("ReactieTestScores" + i);
+            newSimonSaysScores.Add(score);
+        }
+        Debug.Log("je kale kanker moeder "+ newSimonSaysScores);
+    }
+
+
+
+    //-----------------------
 
     // Start is called before the first frame update
     void Start()
@@ -91,8 +128,8 @@ public class SimonSaysScript : MonoBehaviour
 
    public void ButtonClickOrder(int button)
     {
-        print(button);
-        print(buttonsClicked);
+        //print(button);
+        //print(buttonsClicked);
         buttonsClicked++;
         if(button == lightOrder[buttonsClicked - 1])// buttonClicked is 1 - 1 = 0 en de buttons waarde is van 0 tot 8 om het zo gelijk te maken
         {
@@ -104,6 +141,12 @@ public class SimonSaysScript : MonoBehaviour
             won = false;
             passed = false;
             print("F");
+
+            score = level;
+            simonSaysScores.Add(score);
+            SaveList();
+
+
         }
 
         if (buttonsClicked == level && passed == true && buttonsClicked != 20)
@@ -206,6 +249,7 @@ public class SimonSaysScript : MonoBehaviour
 
     public void Reload()
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

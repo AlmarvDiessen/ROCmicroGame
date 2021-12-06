@@ -24,20 +24,6 @@ public class MainMenu : MonoBehaviour
     }
     public void LaadSnelheidTest()
     {
-        SceneManager.LoadScene(1);
-    }
-
-    public void ReactieVermogenTest()
-    {
-        SceneManager.LoadScene(3);
-    }
-
-    public void SimonSays()
-    {
-        SceneManager.LoadScene(2);
-    }
-    public void Trainingen()
-    {
-
+        SceneManager.LoadScene(scene);
     }
 }

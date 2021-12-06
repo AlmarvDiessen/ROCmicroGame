@@ -27,6 +27,7 @@ public class WindowGraph : MonoBehaviour
 
     private RectTransform graphContainer;
 
+    //
     private RectTransform labelTemplateX;
     private RectTransform labelTemplateY;
 
@@ -158,7 +159,7 @@ public class WindowGraph : MonoBehaviour
             float yPosition = ((valueList[i] - yMinimum) / (yMaximum - yMinimum)) * graphHeight;
 
             /*
-            // doet het zelfde als:
+            // lastDot = (i == valueList.Count - maxVisibleValueAmount) ? true : false; doet het zelfde als:
             if (i == valueList.Count - maxVisibleValueAmount)
             {
                 lastDot = true;

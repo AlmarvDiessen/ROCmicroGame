@@ -7,6 +7,10 @@ using TMPro;
 
 public class ReactieTest : MonoBehaviour
 {
+    
+
+
+
     public Button settingsButton;
     public Button gameButton;
     bool klikbaar = false;
@@ -22,11 +26,56 @@ public class ReactieTest : MonoBehaviour
     public TextMeshProUGUI gemiddeldeText;
     public TextMeshProUGUI besteGemiddelde;
     public GameObject pauseMenu;
+    bool gedaan;
+    /*
+    //-----------------------
 
-    // Start is called before the first frame update
+    public List<float> reactieTestScores = new List<float>();
+    private int savedListCount;
+    public float score;
+
+    public void SaveList()
+    {
+        for(int i = 0; i < reactieTestScores.Count; i++)
+        {
+            PlayerPrefs.SetFloat("ReactieTestScores" + i, reactieTestScores[i]);
+        }
+
+        PlayerPrefs.SetInt("aantalRTScores", reactieTestScores.Count);
+    }
+
+    public void LoadList()
+    {
+        //reactieTestScores.Clear();
+        savedListCount = PlayerPrefs.GetInt("aantalRTScores");
+        Debug.Log(savedListCount);
+
+        for(int i = 0; i < savedListCount; i++)
+        {
+            float score = PlayerPrefs.GetFloat("ReactieTestScores" + i);
+            reactieTestScores.Add(score);
+            Debug.Log(reactieTestScores[i]);
+        }
+    }
+
+    //-----------------------
+    */
+
+    void ZetListScore()
+    {
+        if (tijden.Count != 0 && gedaan == false)
+        {
+            PlayerPrefs.SetInt("AKG", PlayerPrefs.GetInt("AKG") + 1);
+            PlayerPrefs.SetFloat("SN_" + PlayerPrefs.GetInt("AKG"), Gemiddelde(tijden));
+            gedaan = true;
+        }
+    }
+
     void Start()
     {
+        gedaan = false;
         ZetTijd();
+        
     }
 
     private void Awake()
@@ -34,16 +83,15 @@ public class ReactieTest : MonoBehaviour
         Time.timeScale = 1;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        TellafenmaakKlaar();
+        TellAfEnMaakKlaar();
         CheckStatusEnVeranderKleur();
         CheckOfBeurtenVoorbijZijn();
         beurtenText.text = "Beurten: " + beurten.ToString();
     }
 
-    float Bestetijd(List<float> CheckLijst)
+    float BesteTijd(List<float> CheckLijst)
     {
         float besteTijd = 0;
         besteTijd = Mathf.Min(CheckLijst.ToArray());
@@ -63,10 +111,22 @@ public class ReactieTest : MonoBehaviour
 
     void ZetScore()
     {
-        besteTijd.text = "Beste Tijd: " + Bestetijd(tijden).ToString("F3");
+        besteTijd.text = "Beste Tijd: " + BesteTijd(tijden).ToString("F3");
         gemiddeldeText.text = "Gemiddeld: " + Gemiddelde(tijden).ToString("F3");
         CheckVoorHighScoreEnZet(Gemiddelde(tijden));
         besteGemiddelde.text = "Beste Gemiddelde: " + PlayerPrefs.GetFloat("GBT").ToString("F3");
+        //score = Gemiddelde(tijden);
+        //SaveList();
+        //LoadList();
+        ZetListScore();
+        print(PlayerPrefs.GetInt("AKG"));
+      //  print(PlayerPrefs.GetFloat("SN_" + PlayerPrefs.GetInt("AKG")));
+        for (int i = 1; i < PlayerPrefs.GetInt("AKG") + 1; i++)
+        {
+            print(PlayerPrefs.GetFloat("SN_" + i));
+        }
+
+
     }
 
     void CheckVoorHighScoreEnZet(float tijdBehaald)
@@ -86,7 +146,7 @@ public class ReactieTest : MonoBehaviour
         wachttijd = Random.Range(2, 5);
     }
 
-    void TellafenmaakKlaar()
+    void TellAfEnMaakKlaar()
     {   
         if (wachttijd > 0)
         {
@@ -117,6 +177,7 @@ public class ReactieTest : MonoBehaviour
     {
         if (beurten <= 0)
         {
+            Debug.Log("works");//------------------------
             Time.timeScale = 0;
             ZetScore();
             settingsButton.enabled = false;
