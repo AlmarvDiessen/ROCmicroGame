@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ReactieTest.unity
     guid: 8849ac39e9044314ba4f0d9761c23fd2
+  - enabled: 1
+    path: Assets/Scenes/Trainingen.unity
+    guid: 0bc345f75d0e2f94db6c4eb35a6fa2a3
   m_configObjects: {}

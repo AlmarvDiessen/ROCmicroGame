@@ -46,7 +46,7 @@ public class SimonSaysScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameOverScreen.SetActive(false);
+        //gameOverScreen.SetActive(false);
         //lees de buttons uit
 
         //lees de buttons uit en geeft een waarda aan int button in de ButtonClickOrder()
@@ -75,8 +75,7 @@ public class SimonSaysScript : MonoBehaviour
     public void OnEnable()
     {
         //begin waardes voor alles
-        level = 0;
-        endeless = true;
+        level = 0;       
         buttonsClicked = 0;
         colorOrderRunCount = -1;
         won = false;
@@ -107,14 +106,14 @@ public class SimonSaysScript : MonoBehaviour
             print("F");
         }
 
-        if (buttonsClicked == level && passed == true && endeless == true)
+        if (buttonsClicked == level && passed == true && buttonsClicked != 20)
         {
             print("level up");
             level++;//level gaat up als de buttons clicked gelijk is aan elkaar
             passed = false;
             StartCoroutine(ColorOrder());
         }
-        if (buttonsClicked == level && passed == true && endeless == false)
+        if (buttonsClicked == level && passed == true && buttonsClicked == 20)
         {
             won = true;
             //do something 
@@ -144,6 +143,27 @@ public class SimonSaysScript : MonoBehaviour
 
 
     }
+    // check om te kijken of de twee lists gelijk zijn aan elkaar.
+    //Method met statement en een return value
+    public bool IslistsGelijk(List<int> simonSays, List<int> playerInput)
+    {
+        //vergelijk de list player input met de Simonsays.
+
+        if (simonSays.Count() != playerInput.Count())
+            return false; // als de list1 niet gelijk is aan de list2 dan is de bool false
+        for (int i = 0; i < simonSays.Count(); i++)// telt het aantal 'int' in route
+        {
+            // als het aantal in list1 niet overeen komt met het aantal in list2 dan is die ook false.
+            if (simonSays[i] != playerInput[i])
+                return false;
+        }
+        // na alle checks als de twee list wel het zelfde zijn dan is de bool true.
+        print("Done");
+        return true;
+    }
+
+    //als de twee list != aan de elkaar dan gameover = true
+    //else blijf door gaan.
 
 
 
@@ -167,6 +187,7 @@ public class SimonSaysScript : MonoBehaviour
     public void PauseMenu()
     {
         pauseMenu.SetActive(true);
+        Time.timeScale = 0;
         game.SetActive(false);
         
     }
@@ -174,6 +195,7 @@ public class SimonSaysScript : MonoBehaviour
     public void ClosePauseMenu()
     {
         pauseMenu.SetActive(false);
+        Time.timeScale = 1;
         game.SetActive(true);
         
     }
@@ -187,29 +209,5 @@ public class SimonSaysScript : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
-
-/*
- *     // check om te kijken of de twee lists gelijk zijn aan elkaar.
-    //Method met statement en een return value
-    public bool IslistsGelijk(List<int> simonSays, List<int> playerInput)
-    {
-        //vergelijk de list player input met de Simonsays.
-
-        if (simonSays.Count() != playerInput.Count())
-            return false; // als de list1 niet gelijk is aan de list2 dan is de bool false
-        for (int i = 0; i < simonSays.Count(); i++)// telt het aantal 'int' in route
-        {
-            // als het aantal in list1 niet overeen komt met het aantal in list2 dan is die ook false.
-            if (simonSays[i] != playerInput[i])
-                return false;
-        }
-        // na alle checks als de twee list wel het zelfde zijn dan is de bool true.
-        print("Done");
-        return true;
-    }
-    
-    //als de twee list != aan de elkaar dan gameover = true
-    //else blijf door gaan.
- */
 
 
