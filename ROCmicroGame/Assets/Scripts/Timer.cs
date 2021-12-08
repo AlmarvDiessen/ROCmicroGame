@@ -63,6 +63,8 @@ public class Timer : MonoBehaviour
     public void Volgende()
     {
         RandomTrainingKiezen();
+        stoptimer = false;
+        knopText.text = "Start";
         Time.timeScale = 0;
     }
 
