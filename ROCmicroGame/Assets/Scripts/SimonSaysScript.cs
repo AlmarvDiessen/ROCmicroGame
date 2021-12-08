@@ -40,7 +40,7 @@ public class SimonSaysScript : MonoBehaviour
 
   
 
-    private float lightspeed = 0.5f;
+    private float lightspeed = 0.25f;
 
 
 
@@ -54,26 +54,38 @@ public class SimonSaysScript : MonoBehaviour
 
     public void SaveList()
     {
-        for(int i = 0; i < simonSaysScores.Count; i++)
-        {
-            PlayerPrefs.SetInt("simonSaysScores" + i, simonSaysScores[i]);
-            print("bischmilla" + simonSaysScores.Count);
-        }
+        PlayerPrefs.SetInt("aantalSimonScores", PlayerPrefs.GetInt("aantalSimonScores") + 1);
+        savedListCount = PlayerPrefs.GetInt("aantalSimonScores");
 
-        PlayerPrefs.SetInt("aantalSimonScores", simonSaysScores.Count);
+        for (int i = 0; i < simonSaysScores.Count; i++)
+        {
+            PlayerPrefs.SetInt("simonSaysScores" + (savedListCount + i), simonSaysScores[i]);
+            print(savedListCount);
+            print("bischmilla" + (savedListCount + simonSaysScores.Count));
+        }
         LoadList();
     }
 
     public void LoadList()
     {
+        PlayerPrefs.SetInt("aantalSimonScores", PlayerPrefs.GetInt("aantalSimonScores") + 1);
         savedListCount = PlayerPrefs.GetInt("aantalSimonScores");
 
         for (int i = 0; i < savedListCount; i++)
         {
-            score = PlayerPrefs.GetInt("ReactieTestScores" + i);
+            score = PlayerPrefs.GetInt("simonSaysScores" + i);
             newSimonSaysScores.Add(score);
         }
-        Debug.Log("je kale kanker moeder "+ newSimonSaysScores);
+        Debug.Log("je kale kanker moeder "+ newSimonSaysScores.Count);
+//check voor the list
+        for(int j = 0; j < savedListCount; j++)
+        {
+            foreach(int kanker in newSimonSaysScores)
+            {
+                print(newSimonSaysScores[j]);//
+            }
+        }
+        
     }
 
 
@@ -83,6 +95,7 @@ public class SimonSaysScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         //gameOverScreen.SetActive(false);
         //lees de buttons uit
 
@@ -144,9 +157,7 @@ public class SimonSaysScript : MonoBehaviour
 
             score = level;
             simonSaysScores.Add(score);
-            SaveList();
-
-
+            SaveList();//------------------------------------------------------
         }
 
         if (buttonsClicked == level && passed == true && buttonsClicked != 20)
