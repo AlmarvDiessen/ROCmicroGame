@@ -23,11 +23,11 @@ public class WindowGraph : MonoBehaviour
 
     public static bool lastDot;
 
+    //
     [SerializeField] private Sprite dotSprite;
 
     private RectTransform graphContainer;
 
-    //
     private RectTransform labelTemplateX;
     private RectTransform labelTemplateY;
 
