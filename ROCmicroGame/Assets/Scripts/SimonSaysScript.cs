@@ -76,7 +76,7 @@ public class SimonSaysScript : MonoBehaviour
             score = PlayerPrefs.GetInt("simonSaysScores" + i);
             newSimonSaysScores.Add(score);
         }
-        Debug.Log("je kale kanker moeder "+ newSimonSaysScores.Count);
+       
 //check voor the list
         for(int j = 0; j < savedListCount; j++)
         {
@@ -95,10 +95,10 @@ public class SimonSaysScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
         //gameOverScreen.SetActive(false);
         //lees de buttons uit
-
+        Time.timeScale = 1;
         //lees de buttons uit en geeft een waarda aan int button in de ButtonClickOrder()
 
         buttons[0].onClick.AddListener(() => ButtonClickOrder(0));

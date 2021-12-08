@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class SettingsScript : MonoBehaviour
 {
 
     public GameObject game;
     public GameObject pauseMenu;
+    public TextMeshProUGUI knopText;
 
     public void PauseMenu()
     {
@@ -21,6 +23,10 @@ public class SettingsScript : MonoBehaviour
     {
         pauseMenu.SetActive(false);
         game.SetActive(true);
+        if (knopText.text == "Stop")
+        {
+            Time.timeScale = 1;
+        }
 
     }
     public void MainMenu()

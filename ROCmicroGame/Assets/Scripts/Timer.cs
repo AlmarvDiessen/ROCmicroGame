@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using TMPro;
 
 public class Timer : MonoBehaviour
 {
     public Slider timerSlider;
-    public Text timerText;
+    public TextMeshProUGUI timerText;
     public float gameTime;
     private bool stoptimer;
     public Training[] trainingen;
     public VideoPlayer trainingsSpeler;
-    public Text trainingText;
-    public Text tijdText;
+    public TextMeshProUGUI trainingText;
+    public TextMeshProUGUI tijdText;
+    public TextMeshProUGUI knopText;
     
     // Start is called before the first frame update
     void Start()
@@ -47,7 +49,15 @@ public class Timer : MonoBehaviour
 
     public void Knopklik()
     {
-        Time.timeScale = 1;
+        if (Time.timeScale == 1)
+        {
+            knopText.text = "Start";
+            Time.timeScale = 0;
+        } else
+        {
+            knopText.text = "Stop";
+            Time.timeScale = 1;
+        }
     }
 
     public void Volgende()
