@@ -43,9 +43,29 @@ public class WindowGraph : MonoBehaviour
     private Func<int, string> getAxisLabelX;
     private Func<float, string> getAxisLabelY;
 
+    //------------
+    private int savedListCount;
+    public int score;
+
+    public List<int> newSimonSaysScores = new List<int>();
+    public void LoadNewSimonList()
+    {
+        PlayerPrefs.SetInt("aantalSimonScores", PlayerPrefs.GetInt("aantalSimonScores") + 1);
+        savedListCount = PlayerPrefs.GetInt("aantalSimonScores");
+
+        for (int i = 0; i < savedListCount; i++)
+        {
+            score = PlayerPrefs.GetInt("simonSaysScores" + i);
+            newSimonSaysScores.Add(score);
+        }
+    }
+
+    //------------
+
     private void Awake()
     {
-        // Grab base objects references
+        LoadNewSimonList();
+        // Pak de base objects referenties
         graphContainer = transform.Find("GraphContainer").GetComponent<RectTransform>();
         labelTemplateX = graphContainer.Find("labelTemplateX").GetComponent<RectTransform>();
         labelTemplateY = graphContainer.Find("labelTemplateY").GetComponent<RectTransform>();
@@ -54,7 +74,7 @@ public class WindowGraph : MonoBehaviour
 
         gameObjectList = new List<GameObject>();
 
-        List<int> valueList = new List<int>() { 2, 98, 56, 45, 39, 22, 17, 15, 13, 17, 25, 37, 40, 36, 33, 98, 56, 45, 39, 22, 17, 15, 13, 17, 25, 37, 40, 36, 33, 98, 56, 45, 39, 22, 17, 15, 13, 17, 25, 37, 40, 36, 33, 98, 56, 45, 39, 22, 17, 15, 13, 17, 25, 37, 40, 36, 33, 98, 56, 45, 39, 22, 17, 15, 13, 17, 25, 37, 40, 36, 33 };
+        List<int> valueList = newSimonSaysScores;
         lineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.green, new Color(1, 1, 1, .5f));
         barChartVisual = new BarChartVisual(graphContainer, Color.green, .8f);
         ShowGraph(valueList, barChartVisual, -1, (int _i) => ""/*<- Hier kan je iets neerzetten wat voor de getallen op de x as komt*/ +(_i+1), (float _f) => "$ " + Mathf.RoundToInt(_f));
@@ -91,16 +111,17 @@ public class WindowGraph : MonoBehaviour
 
         if (maxVisibleValueAmount > valueList.Count)
         {
-            // vallidate the amount to show the maximum
+            // valideer de amount om de maximum weer te geven
             // maxVisibleValueAmount = valueList.Count;
             maxVisibleValueAmount = 1;
         }
 
         this.maxVisibleValueAmount = maxVisibleValueAmount;
 
+        // Test voor label defaults
         if (getAxisLabelX == null)
         {
-            getAxisLabelX = delegate (int _i)
+            getAxisLabelX = delegate (int _i)// delegate word gebruikt om methods te passen als argumments naar andere methods.
             {
                 return _i.ToString();
             };
@@ -115,13 +136,14 @@ public class WindowGraph : MonoBehaviour
         }
 
 
-
+        // Maakt de vorige grafiek schoon.
         foreach (GameObject gameObject in gameObjectList)
         {
             Destroy(gameObject);
         }
         gameObjectList.Clear();
 
+        // pakt de breedte en de hoogte van de container.
         float graphWidth = graphContainer.sizeDelta.x;
         float graphHeight = graphContainer.sizeDelta.y;
 
@@ -151,8 +173,8 @@ public class WindowGraph : MonoBehaviour
 
         float xSize = graphWidth / (maxVisibleValueAmount + 1);
 
+        // Loop alle visuele data punten door.
         int xIndex = 0;
-
         for (int i = Mathf.Max(valueList.Count - maxVisibleValueAmount, 0); i < valueList.Count; i++)
         {
             float xPosition = xSize + xIndex * xSize;
@@ -182,6 +204,7 @@ public class WindowGraph : MonoBehaviour
 
             gameObjectList.AddRange(graphVisual.AddGraphVisual(new Vector2(xPosition, yPosition), xSize));
 
+            // Dupliceer de x label template.
             RectTransform labelX = Instantiate(labelTemplateX);
             labelX.SetParent(graphContainer, false);
             labelX.gameObject.SetActive(true);
@@ -189,6 +212,7 @@ public class WindowGraph : MonoBehaviour
             labelX.GetComponent<Text>().text = getAxisLabelX(i);
             gameObjectList.Add(labelX.gameObject);
 
+            // Dupliceer de x dash template.
             RectTransform dashX = Instantiate(dashTemplateY);
             dashX.SetParent(graphContainer, false);
             dashX.gameObject.SetActive(true);
@@ -198,9 +222,11 @@ public class WindowGraph : MonoBehaviour
             xIndex++;
         }
         
+        // Set up seperators op de y axis
         int seperatorCount = 10;
         for (int i = 0; i <= seperatorCount; i++)
         {
+            // Dupliceer de y label template.
             RectTransform labelY = Instantiate(labelTemplateY);
             labelY.SetParent(graphContainer, false);
             labelY.gameObject.SetActive(true);
@@ -209,6 +235,7 @@ public class WindowGraph : MonoBehaviour
             labelY.GetComponent<Text>().text = getAxisLabelY(yMinimum + (normalizedValue * (yMaximum - yMinimum)));
             gameObjectList.Add(labelY.gameObject);
 
+            // Dupliceer the y dash template.
             RectTransform dashY = Instantiate(dashTemplateX);
             dashY.SetParent(graphContainer, false);
             dashY.gameObject.SetActive(true);

@@ -63,10 +63,10 @@ public class SimonSaysScript : MonoBehaviour
             print(savedListCount);
             print("bischmilla" + (savedListCount + simonSaysScores.Count));
         }
-        LoadList();
+        LoadNewSimonList();
     }
 
-    public void LoadList()
+    public void LoadNewSimonList()
     {
         PlayerPrefs.SetInt("aantalSimonScores", PlayerPrefs.GetInt("aantalSimonScores") + 1);
         savedListCount = PlayerPrefs.GetInt("aantalSimonScores");

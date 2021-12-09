@@ -1049,7 +1049,7 @@ GameObject:
   - component: {fileID: 572287671}
   - component: {fileID: 572287670}
   m_Layer: 5
-  m_Name: Button
+  m_Name: MentaleGrafiekenBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1371,7 +1371,7 @@ GameObject:
   - component: {fileID: 860348083}
   - component: {fileID: 860348082}
   m_Layer: 5
-  m_Name: Button
+  m_Name: FysiekeGrafiekenBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3061,6 +3061,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5d8c752acac9a04198277c818998adb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scene: 0
   menu: {fileID: 2093276468}
   msKnoppen: {fileID: 1897877692}
 --- !u!1 &1482039901
