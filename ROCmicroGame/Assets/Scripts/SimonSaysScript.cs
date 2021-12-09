@@ -26,26 +26,26 @@ public class SimonSaysScript : MonoBehaviour
     List<int> playerInput = new List<int>();
 
     // bools
-    bool gameOver = false;
     public bool won;
     public bool passed;
-    public bool endeless;
 
+    // Color customisation
     private Color highLightColor = Color.blue;
     private Color defaultColor = Color.white;
 
+    // GameObjects
     public GameObject game;
     public GameObject gameOverScreen;
     public GameObject pauseMenu;
 
-  
-
     private float lightspeed = 0.25f;
 
 
+    //-------------------
 
-    //-----------------------
-
+    /// <summary>
+    /// Hier worden de steeds de nieuwe player prefs aangemaakt zodat we de list met een loop overkunnen zetten naar aparte benamingen in playerprefs en zo later uit kunnen lezen met een loop.
+    /// </summary>
     public List<int> simonSaysScores = new List<int>();
     private int savedListCount;
     public int score;
@@ -54,51 +54,43 @@ public class SimonSaysScript : MonoBehaviour
 
     public void SaveList()
     {
-        PlayerPrefs.SetInt("aantalSimonScores", PlayerPrefs.GetInt("aantalSimonScores") + 1);
+        PlayerPrefs.SetInt("aantalSimonScores", PlayerPrefs.GetInt("aantalSimonScores")+ 1);
         savedListCount = PlayerPrefs.GetInt("aantalSimonScores");
 
         for (int i = 0; i < simonSaysScores.Count; i++)
         {
             PlayerPrefs.SetInt("simonSaysScores" + (savedListCount + i), simonSaysScores[i]);
             print(savedListCount);
-            print("bischmilla" + (savedListCount + simonSaysScores.Count));
+            print("check of we steeds een nieuwe playerpref konden aanmaken." + (savedListCount + simonSaysScores.Count));
         }
         LoadNewSimonList();
     }
 
+    /// <summary>
+    /// Hiermee kunnen we de playerPrefs laden met de loop.
+    /// Door steeds een cijfer achter de benaming van de playerprefs te zetten.
+    /// En zo steeds een nieuwe uit te lezen.
+    /// </summary>
     public void LoadNewSimonList()
     {
-        PlayerPrefs.SetInt("aantalSimonScores", PlayerPrefs.GetInt("aantalSimonScores") + 1);
-        savedListCount = PlayerPrefs.GetInt("aantalSimonScores");
+        savedListCount = PlayerPrefs.GetInt("aantalSimonScores"+ 1);
 
         for (int i = 0; i < savedListCount; i++)
         {
             score = PlayerPrefs.GetInt("simonSaysScores" + i);
             newSimonSaysScores.Add(score);
         }
-       
-//check voor the list
-        for(int j = 0; j < savedListCount; j++)
-        {
-            foreach(int kanker in newSimonSaysScores)
-            {
-                print(newSimonSaysScores[j]);//
-            }
-        }
-        
+        Debug.Log("het aantal scores: "+ newSimonSaysScores.Count);        
     }
-
-
-
-    //-----------------------
+    //--------------------------
 
     // Start is called before the first frame update
     void Start()
     {
-
+        Time.timeScale = 1;
         //gameOverScreen.SetActive(false);
         //lees de buttons uit
-        Time.timeScale = 1;
+
         //lees de buttons uit en geeft een waarda aan int button in de ButtonClickOrder()
 
         buttons[0].onClick.AddListener(() => ButtonClickOrder(0));
@@ -141,6 +133,9 @@ public class SimonSaysScript : MonoBehaviour
 
    public void ButtonClickOrder(int button)
     {
+        ///sumary
+        /// kijkt of de button nummer geklikt is aan de light order en dan gaat die door naar de volgende level zo niet is het gameOver.
+
         //print(button);
         //print(buttonsClicked);
         buttonsClicked++;
@@ -153,13 +148,15 @@ public class SimonSaysScript : MonoBehaviour
         {
             won = false;
             passed = false;
+            DisableButtons();
             print("F");
 
             score = level;
             simonSaysScores.Add(score);
-            SaveList();//------------------------------------------------------
+            SaveList();
         }
 
+        // blijft door loopen totdat buttonsClicked niet 20 is.
         if (buttonsClicked == level && passed == true && buttonsClicked != 20)
         {
             print("level up");
@@ -237,7 +234,10 @@ public class SimonSaysScript : MonoBehaviour
             buttons[i].GetComponent<Button>().interactable = true;
         }
     }
-    // settings voor de button
+
+    /// <summary>
+    /// alle functions voor de menu knoppen
+    /// </summary>
     public void PauseMenu()
     {
         pauseMenu.SetActive(true);

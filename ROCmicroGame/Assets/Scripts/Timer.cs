@@ -7,25 +7,35 @@ using TMPro;
 
 public class Timer : MonoBehaviour
 {
+    /// <summary>
+    /// variables en functions voor het uiterlijk van het fysieke gedeelte.
+    /// </summary>
     public Slider timerSlider;
     public TextMeshProUGUI timerText;
     public float gameTime;
     private bool stoptimer;
     public Training[] trainingen;
     public VideoPlayer trainingsSpeler;
+
+    /// <summary>
+    /// TMP elements voor de tijd en knoppen.
+    /// </summary>
     public TextMeshProUGUI trainingText;
     public TextMeshProUGUI tijdText;
     public TextMeshProUGUI knopText;
-    
-    // Start is called before the first frame update
+
+    // pauzeert de tijd en roept RandomTrainingKiezen(); op.
     void Start()
     {
         RandomTrainingKiezen();
         stoptimer = false;       
         Time.timeScale = 0;     
     }
-
-    // Update is called once per frame
+    
+    /// <summary>
+    /// Calculaties voor de timer.
+    /// Ook wordt de slider hier geupdate.
+    /// </summary>
     void Update()
     {
         float time = gameTime -= Time.deltaTime;
@@ -47,6 +57,9 @@ public class Timer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// pauze en start knop om de slider te laten werken(still zetten en aan zetten van de timer).
+    /// </summary>
     public void Knopklik()
     {
         if (Time.timeScale == 1)
@@ -60,6 +73,9 @@ public class Timer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Kiest een nieuwe oefening/training en zet de tijd weer op 0.
+    /// </summary>
     public void Volgende()
     {
         RandomTrainingKiezen();
@@ -68,6 +84,9 @@ public class Timer : MonoBehaviour
         Time.timeScale = 0;
     }
 
+    /// <summary>
+    /// kiest een random training uit en stuurt dat door.
+    /// </summary>
     void RandomTrainingKiezen()
     {
         int rnd;
@@ -75,6 +94,9 @@ public class Timer : MonoBehaviour
         TrainingKlaarzetten(rnd);
     }
 
+    /// <summary>
+    /// zet de training klaar door alle scriptable objects te pakken.
+    /// </summary>
     void TrainingKlaarzetten(int gekozenTraining)
     {
         trainingsSpeler.clip = trainingen[gekozenTraining].trainingsVideo;

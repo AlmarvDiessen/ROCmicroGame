@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    // GameObjects
     public GameObject menu;
     public GameObject msKnoppen;
 
@@ -15,11 +16,18 @@ public class MainMenu : MonoBehaviour
         msKnoppen.SetActive(true);
     }
 
+    /// <summary>
+    /// zet de menu aan en de msKnoppen uit.
+    /// </summary>
     public void Terug()
     {
         menu.SetActive(true);
         msKnoppen.SetActive(false);
     }
+
+    /// <summary>
+    /// hieronder de functions die worden aangeroepen voor het veranderen van de scene. 
+    /// </summary>
     public void LaadSnelheidTest()
     {
         SceneManager.LoadScene(1);
@@ -38,4 +46,9 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene(4);
     }
+    public void LaadGrafieken()
+    {
+        SceneManager.LoadScene(5);
+    }
+    
 }

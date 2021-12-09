@@ -43,28 +43,50 @@ public class WindowGraph : MonoBehaviour
     private Func<int, string> getAxisLabelX;
     private Func<float, string> getAxisLabelY;
 
-    //------------
+
+    //------reactie test
+    /*
+    public float reactieScore;
+    public List<float> reactieTestScores = new List<float>();
+
+    void LoadReactieList()
+    {
+        // AKG is aantal keren gespeelt
+        for (int i = 1; i < PlayerPrefs.GetInt("AKG") + 1; i++)
+        {
+            reactieScore = PlayerPrefs.GetFloat("SN_" + PlayerPrefs.GetInt("AKG"));
+            reactieTestScores.Add(reactieScore);
+        }
+    }
+    */
+    //------
+
+    /// <summary>
+    /// 
+    /// </summary>
     private int savedListCount;
-    public int score;
+    public int simonScore;
 
     public List<int> newSimonSaysScores = new List<int>();
     public void LoadNewSimonList()
     {
-        PlayerPrefs.SetInt("aantalSimonScores", PlayerPrefs.GetInt("aantalSimonScores") + 1);
         savedListCount = PlayerPrefs.GetInt("aantalSimonScores");
-
-        for (int i = 0; i < savedListCount; i++)
+        if (savedListCount != 0)
         {
-            score = PlayerPrefs.GetInt("simonSaysScores" + i);
-            newSimonSaysScores.Add(score);
+            for (int i = 0; i < savedListCount; i++)
+            {
+                simonScore = PlayerPrefs.GetInt("simonSaysScores" + i);
+                newSimonSaysScores.Add(simonScore);
+            }
         }
     }
 
-    //------------
-
     private void Awake()
     {
+        //LoadReactieList();
+        // loading the simon says score list.
         LoadNewSimonList();
+
         // Pak de base objects referenties
         graphContainer = transform.Find("GraphContainer").GetComponent<RectTransform>();
         labelTemplateX = graphContainer.Find("labelTemplateX").GetComponent<RectTransform>();
@@ -74,10 +96,20 @@ public class WindowGraph : MonoBehaviour
 
         gameObjectList = new List<GameObject>();
 
+        /// <summary>
+        /// eerste list is een list voor het testen.
+        /// tweede list is een list die niet gebruikt word maar normaal zou je ook de reactieTestScores kunnen laten zien in een grafiek maar IVM weinig tijd en problemen met floats hebben we het eruit gehaalt.
+        /// </summary>
+        //List<int> valueList = new List<int> {30, 20, 5, 7, 10, 15, 8, 5, 9, 13};
+        //List<float> valueList = reactieTestScores;
+
+        // vult de list met newSimonSaysScores (<- ook een list)
         List<int> valueList = newSimonSaysScores;
+
+
         lineGraphVisual = new LineGraphVisual(graphContainer, dotSprite, Color.green, new Color(1, 1, 1, .5f));
         barChartVisual = new BarChartVisual(graphContainer, Color.green, .8f);
-        ShowGraph(valueList, barChartVisual, -1, (int _i) => ""/*<- Hier kan je iets neerzetten wat voor de getallen op de x as komt*/ +(_i+1), (float _f) => "$ " + Mathf.RoundToInt(_f));
+        ShowGraph(valueList, barChartVisual, -1, (int _i) => ""/*<- Hier kan je iets neerzetten wat voor de getallen op de x as komt*/ +(_i+1), (float _f) => "Score: " + Mathf.RoundToInt(_f));
 
         /*bool useBarChart = false;
         if (useBarChart)
@@ -96,6 +128,9 @@ public class WindowGraph : MonoBehaviour
         ShowGraph(this.valueList, graphVisual, this.maxVisibleValueAmount, this.getAxisLabelX, this.getAxisLabelY);
     }
 
+    /// <summary>
+    /// ShowGraph laat de grafiek zien door hem te bouwen op basis van de argument values.
+    /// </summary>
     private void ShowGraph(List<int> valueList, IGraphVisual graphVisual, int maxVisibleValueAmount = -1, Func<int, string> getAxisLabelX = null, Func<float, string> getAxisLabelY = null)
     {
         this.valueList = valueList;
@@ -147,9 +182,15 @@ public class WindowGraph : MonoBehaviour
         float graphWidth = graphContainer.sizeDelta.x;
         float graphHeight = graphContainer.sizeDelta.y;
 
+
+        ///<summary>
+        /// zet/berekent de yMaximum en de yMinimum van de grafiek.
+        /// </summary>
+        // floats voor de yMaximum en de yMinimum
         float yMaximum = valueList[0];
         float yMinimum = valueList[0];
 
+        // for loop die loopt door de valueList heen om te kijken of value groter of kleiner is dan yMaximum en Yminimum zo ja dan veranderd hij de yMaximum of yMinimum
         for (int i = Mathf.Max(valueList.Count - maxVisibleValueAmount, 0); i < valueList.Count; i++)
         {
             int value = valueList[i];
@@ -163,9 +204,11 @@ public class WindowGraph : MonoBehaviour
             }
         }
 
+        // check of de yDifference kleiner is dan 0 zo ja zet yDifference op 5f.
         float yDifference = yMaximum - yMinimum;
         if (yDifference <= 0) yDifference = 5f;
 
+        // crieerd een 20% margin.
         yMaximum = yMaximum + (yDifference * 0.2f);
         yMinimum = yMinimum - (yDifference * 0.2f);
 
@@ -200,7 +243,7 @@ public class WindowGraph : MonoBehaviour
             //valueList.Count - maxVisibleValueAmount zorgt ervoor dat het programma mee telt of dit het eerste punt is van de zichtbare punten in de grafiek.
 
             */
-            lastDot = (i == valueList.Count - maxVisibleValueAmount) ? true : false;
+            lastDot = (i == valueList.Count - maxVisibleValueAmount) ? true : false;// dit is eigenlijk een check om te zorgen of er wel echt een lijn kan geplaatst worden zodat er geen lijn komt tussen het laatste en eerste punt.
 
             gameObjectList.AddRange(graphVisual.AddGraphVisual(new Vector2(xPosition, yPosition), xSize));
 
@@ -223,7 +266,7 @@ public class WindowGraph : MonoBehaviour
         }
         
         // Set up seperators op de y axis
-        int seperatorCount = 10;
+        int seperatorCount = 5;
         for (int i = 0; i <= seperatorCount; i++)
         {
             // Dupliceer de y label template.
@@ -244,17 +287,31 @@ public class WindowGraph : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Maakt een interface genaamd IGraphViusal dat een GameObject list crieerd die GraphVisuals toevoegd.
+    /// </summary>
     private interface IGraphVisual
     {
         List<GameObject> AddGraphVisual(Vector2 graphPosition, float graphPositionWidth);
     }
 
+    /// <summary>
+    /// Maakt een class aan die gebruik maakt van IGraphVisual en de class heet BarcharVisual.
+    /// </summary>
     private class BarChartVisual : IGraphVisual
     {
+        // RectTransform voor de graphContainer.
         private RectTransform graphContainer;
+
+        // Color customisation.
         private Color barColor;
+
+        // float voor de multiplier word gebruikt voor de barWidth.
         private float barWidthMultiplier;
 
+        /// <summary>
+        /// zorgt ervoor dat de visual de correcte container, color en multiplier gebruikt.
+        /// </summary>
         public BarChartVisual(RectTransform graphContainer, Color barColor, float barWidthMultiplier)
         {
             this.graphContainer = graphContainer;
@@ -262,12 +319,19 @@ public class WindowGraph : MonoBehaviour
             this.barWidthMultiplier = barWidthMultiplier;
         }
 
+        /// <summary>
+        /// zet de CreateBar op de barGameObject en voegt hem toe aan de List<GameObject>
+        /// </summary>
         public List<GameObject> AddGraphVisual(Vector2 graphPosition, float graphPositionWidth)
         {
-            GameObject barGameObject = CreateBar(graphPosition, graphPositionWidth);
+            GameObject barGameObject = CreateBar(graphPosition, graphPositionWidth);// gebruikt de graphPosition en de graphPositionWidth om de CreateBar uit te voeren.
             return new List<GameObject>() { barGameObject };
         }
 
+        /// <summary>
+        /// maakt de bar aan met de bijbehoorende posities en barWidth.
+        /// Ook wordt hier het uiterlijk van de bar aangemaakt.
+        /// </summary>
         private GameObject CreateBar(Vector2 graphPosition, float barWidth)
         {
             GameObject gameObject = new GameObject("bar", typeof(Image));
@@ -283,18 +347,21 @@ public class WindowGraph : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Hier wordt een class gemaakt met de IGraphVisual genaamd LineGraphVisual.
+    /// </summary>
     private class LineGraphVisual : IGraphVisual
     {
+        // benodigde privates voor de costumisation.
         private RectTransform graphContainer;
-
         private Sprite dotSprite;
-
         private GameObject lastDotGameObject;
-
         private Color dotColor;
-
         private Color dotConnectionColor;
 
+        /// <summary>
+        /// Zorgt ervoor dat de visual de correcte container, color, dotConnectionColor en multiplier gebruikt.
+        /// </summary>
         public LineGraphVisual(RectTransform graphContainer, Sprite dotSprite, Color dotColor, Color dotConnectionColor)
         {
             this.graphContainer = graphContainer;
@@ -304,13 +371,18 @@ public class WindowGraph : MonoBehaviour
             lastDotGameObject = null;
         }
 
+        /// <summary>
+        /// Hier worden de punten bekeken en er word gecheckt of er een lijn kan gemaakt worden.
+        /// </summary>
         public List<GameObject> AddGraphVisual(Vector2 graphPosition, float graphPositionWidth)
         {
             List<GameObject> gameObjectList = new List<GameObject>();
             GameObject dotGameObject = CreateDot(graphPosition);
             gameObjectList.Add(dotGameObject);
+            // check of de laatste dot game object niet null is en of de bool lastDot op false staat.
             if (lastDotGameObject != null && lastDot == false)
             {
+                // crieerd de dot connection.
                 GameObject dotConnectionGameObject = CreateDotConnection(lastDotGameObject.GetComponent<RectTransform>().anchoredPosition, dotGameObject.GetComponent<RectTransform>().anchoredPosition);
                 gameObjectList.Add(dotConnectionGameObject);
             }
@@ -318,8 +390,11 @@ public class WindowGraph : MonoBehaviour
             return gameObjectList;
         }
 
+        /// <summary>
+        /// Maakt een dot aan met de goede bij behoorende positie.
+        /// Ook wordt er hier gebruik gemaakt van costumisation.
+        /// </summary>
         GameObject gameObject;
-
         private GameObject CreateDot(Vector2 anchoredPosition)
         {
             gameObject = new GameObject("dot", typeof(Image));
@@ -334,6 +409,11 @@ public class WindowGraph : MonoBehaviour
             return gameObject;
         }
 
+        /// <summary>
+        /// Hier word de dot connection gemaakt.
+        /// Er worder een paar berekeningen gedaan voor het goet plaatsen van de lines van de linerenderer.
+        /// Ook word er gebruik gemaakt van de eerder aangegeven costumisations.
+        /// </summary>
         private GameObject CreateDotConnection(Vector2 dotPositionA, Vector2 dotPositionB)
         {
             GameObject gameObject = new GameObject("dotConnection", typeof(Image));
@@ -352,6 +432,9 @@ public class WindowGraph : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Hieronder de buttons voor de functies die eerder zijn gemaakt.
+    /// </summary>
     public void BarChartBtn()
     {
         SetGraphVisual(barChartVisual);
