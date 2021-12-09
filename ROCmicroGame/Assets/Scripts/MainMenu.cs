@@ -5,8 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public int scene = 0;
-
     public GameObject menu;
     public GameObject msKnoppen;
 
@@ -24,6 +22,20 @@ public class MainMenu : MonoBehaviour
     }
     public void LaadSnelheidTest()
     {
-        SceneManager.LoadScene(scene);
+        SceneManager.LoadScene(1);
+    }
+
+    public void LaadSimonSays()
+    {
+       SceneManager.LoadScene(2);
+    }
+
+    public void LaadReactieTest()
+    {
+        SceneManager.LoadScene(3);
+    }
+    public void LaadTraining()
+    {
+        SceneManager.LoadScene(4);
     }
 }
